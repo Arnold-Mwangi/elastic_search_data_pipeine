@@ -1,2 +1,2 @@
 - pipeline.id: main
-  path.config: "/usr/share/logstash/pipeline/*.conf"
+  path.config: "/usr/share/logstash/pipeline/mysql_to_es.conf"

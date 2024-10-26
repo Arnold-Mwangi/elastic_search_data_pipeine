@@ -25,8 +25,7 @@ services:
     image: docker.elastic.co/logstash/logstash:8.0.0
     volumes:
       - ./logstash/pipeline:/usr/share/logstash/pipeline
-      - ./logstash/config:/usr/share/logstash/config
-      - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
     ports:
       - "5044:5044"
     depends_on:
@@ -56,9 +55,10 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   kafka-connect:
-    image: debezium/connect:1.7
+    image: debezium/connect:1.9
     build:
-      context: ./kafka-connect
+      context: .
+      dockerfile: ./kafka-connect/Dockerfile
     ports:
       - "8083:8083"
     environment:
@@ -73,12 +73,11 @@ services:
     volumes:
       - ./scripts:/scripts
       - ./debezium:/debezium
-      - ./table_config.json:/debezium/table_config.json
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8083/"]
       interval: 30s
       timeout: 10s
       retries: 5
-    
+
 volumes:
   es_data:
